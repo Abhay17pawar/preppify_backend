@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from app.gemini import generate_interview_questions
 from app.supabase_client import supabase
 import json
@@ -12,6 +12,7 @@ class InterviewRequest(BaseModel):
     techstack: str
     type: str
     amount: int
+    email: EmailStr
 
 @router.post("/generate-and-save")
 async def generate_and_save(data: InterviewRequest):
@@ -30,7 +31,8 @@ async def generate_and_save(data: InterviewRequest):
         "techstack": data.techstack,
         "type": data.type,
         "amount": data.amount,
-        "questions": json.dumps(questions)
+        "questions": json.dumps(questions),
+        "email": data.email
     }
 
     print("Record to insert:", record)

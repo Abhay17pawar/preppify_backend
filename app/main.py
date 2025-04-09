@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from app.gemini import generate_interview_questions
 from app.supabase_client import supabase
 from app.routes.interview import router as interview_router
@@ -14,6 +14,7 @@ class InterviewRequest(BaseModel):
     techstack: str
     type: str
     amount: int
+    email: EmailStr
 
 @app.post("/generate-questions")
 async def generate(data: InterviewRequest):
@@ -31,7 +32,8 @@ async def generate(data: InterviewRequest):
         "techstack": data.techstack,
         "type": data.type,
         "amount": data.amount,
-        "questions": questions
+        "questions": questions,
+        "email": data.email
     }).execute()
 
     return {"questions": questions}
