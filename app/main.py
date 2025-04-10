@@ -1,12 +1,22 @@
 from fastapi import FastAPI
 from pydantic import BaseModel, EmailStr
+from fastapi.middleware.cors import CORSMiddleware
 from app.gemini import generate_interview_questions
 from app.supabase_client import supabase
 from app.routes.interview import router as interview_router
 import json
-import os  # ✅ Added import
+import os 
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(interview_router)
 
 
